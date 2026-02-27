@@ -4,3 +4,17 @@
   background: white !important;
   color: black !important;
 }
+#button{
+  color: red !important;
+  font-weight: bold !important;
+}
+
+#addproduct{
+  color: green !important;
+  font-weight: bold !important;
+}
+
+#inv{
+  color: rgb(21, 4, 116) !important;
+  font-weight: bold !important;
+}

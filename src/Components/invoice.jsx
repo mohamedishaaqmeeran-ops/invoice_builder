@@ -147,17 +147,17 @@ const Invoice = () => {
 
     y += 10;
 
-    pdf.text(`Subtotal: Rs ${subtotal.toFixed(2)}`, 10, y);
+    pdf.text(`Subtotal: Rs ${subtotal.toFixed(2)}`, 150, y);
     y += 8;
 
-    pdf.text(`GST: Rs ${totalGST.toFixed(2)}`, 10, y);
+    pdf.text(`GST: Rs ${totalGST.toFixed(2)}`, 150, y);
     y += 8;
 
-    pdf.text(`Discount: Rs ${totalDiscount.toFixed(2)}`, 10, y);
+    pdf.text(`Discount: Rs ${totalDiscount.toFixed(2)}`, 150, y);
     y += 8;
 
     pdf.setFontSize(14);
-    pdf.text(`Final Total: Rs ${finalTotal.toFixed(2)}`, 10, y);
+    pdf.text(`Final Total: Rs ${finalTotal.toFixed(2)}`, 150, y);
 
     y += 12;
 
@@ -190,7 +190,7 @@ const Invoice = () => {
       >
         <div className="mb-4 flex items-center gap-4">
           <img src={logo} alt="logo" className="h-16" />
-          <h1 className="text-xl font-bold italic">Invoice</h1>
+          <h1 id="inv" className="text-xl font-bold italic">Invoice</h1>
         </div>
 
 
@@ -330,11 +330,12 @@ const Invoice = () => {
               }
               className="w-10 md:w-20 p-2 border rounded"
             />
-            <button onClick={() => removeItem(i)} className="text-white px-4 py-2 rounded-3xl cursor-pointer">Delete</button>
+            <button id="button" onClick={() => removeItem(i)} className="text-white px-4 py-2 rounded-3xl cursor-pointer">Delete</button>
           </div>
         ))}
 
         <button
+        id="addproduct"
           onClick={addProduct}
           className="mb-4 px-4 py-2 bg-blue-950 text-white rounded hover:bg-blue-700 cursor-pointer"
         >
@@ -371,7 +372,7 @@ const Invoice = () => {
       <div className="flex  gap-4 mt-3 md:w-140">
         <button
           onClick={() => navigate('/')}
-          className="flex-1 bg-green-600 md:px-4 py-2 text-white rounded cursor-pointer hover:bg-red-800"
+          className="flex-1 bg-green-600 md:px-4 py-2 text-white rounded cursor-pointer hover:bg-green-800"
         >
           Back to home
         </button>
