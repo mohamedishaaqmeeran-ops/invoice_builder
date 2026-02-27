@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+#invoicePDF * {
+  background: white !important;
+  color: black !important;
+}
