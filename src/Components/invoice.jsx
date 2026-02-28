@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify/unstyled";
 import jsPDF from "jspdf";
 import Navbar from "./Navbar";
 import html2canvas from "html2canvas";
@@ -75,7 +77,10 @@ const Invoice = () => {
   }, [customerMobile]);
 
   const addProduct = () =>
-    setItems([...items, { desc: "", qty: 1, price: 0, gst: 0, discount: 0 }]);
+    setItems([
+      ...items,
+      { desc: "", qty: 1, price: 0, gst: 0, discount: 0, total: 0 },
+    ]);
 
   const subtotal = items.reduce((sum, item) => sum + item.qty * item.price, 0);
 
@@ -127,16 +132,20 @@ const Invoice = () => {
     pdf.text("Price", 100, y);
     pdf.text("GST%", 130, y);
     pdf.text("Disc%", 160, y);
-
+    pdf.text("Total", 185, y);
     y += 8;
 
     items.forEach((item) => {
+      const itemTotal =
+        item.qty * item.price +
+        (item.qty * item.price * item.gst) / 100 -
+        (item.qty * item.price * item.discount) / 100;
       pdf.text(item.desc || "-", 10, y);
       pdf.text(String(item.qty), 80, y);
       pdf.text(String(item.price), 100, y);
       pdf.text(String(item.gst), 130, y);
       pdf.text(String(item.discount), 160, y);
-
+      pdf.text(itemTotal.toFixed(2), 185, y);
       y += 8;
     });
 
@@ -173,10 +182,12 @@ const Invoice = () => {
     pdf.save(`Invoice-${invoice}.pdf`);
 
     setInvoice(invoice + 1);
+    toast.success("Invoice Downloaded");
   };
   const removeItem = (index) => {
     setItems(items.filter((_, i) => i !== index));
   };
+
   return (
     <div className="min-h-screen bg-blue-950 ">
       <Navbar />
@@ -259,92 +270,112 @@ const Invoice = () => {
             <div className="w-20 text-center">Price</div>
             <div className="w-16 text-center">GST%</div>
             <div className="w-20 text-center">Disc%</div>
+            <div className="w-24 text-center">Total</div>
             <div className="w-25 text-center">Action</div>
           </div>
-          {items.map((item, i) => (
-            <div key={i} className="flex gap-2 mb-2 flex-wrap">
-              <input
-                type="text"
-                placeholder="Item"
-                value={item.desc}
-                onChange={(e) =>
-                  setItems(
-                    items.map((it, idx) =>
-                      idx === i ? { ...it, desc: e.target.value } : it,
-                    ),
-                  )
-                }
-                className="flex-1 w-10 md:w-auto p-2 border rounded"
-              />
-              <input
-                type="number"
-                placeholder="Qty"
-                value={item.qty}
-                min={1}
-                onChange={(e) =>
-                  setItems(
-                    items.map((it, index) =>
-                      index === i ? { ...it, qty: Number(e.target.value) } : it,
-                    ),
-                  )
-                }
-                className="w-10 md:w-16 p-2 border rounded"
-              />
-              <input
-                type="number"
-                placeholder="Price"
-                value={item.price}
-                min={0}
-                onChange={(e) =>
-                  setItems(
-                    items.map((it, index) =>
-                      index === i
-                        ? { ...it, price: Number(e.target.value) }
-                        : it,
-                    ),
-                  )
-                }
-                className="w-10 md:w-20 p-2 border rounded"
-              />
-              <input
-                type="number"
-                placeholder="GST %"
-                value={item.gst}
-                min={0}
-                onChange={(e) =>
-                  setItems(
-                    items.map((it, index) =>
-                      index === i ? { ...it, gst: Number(e.target.value) } : it,
-                    ),
-                  )
-                }
-                className="w-10 md:w-16 p-2 border rounded"
-              />
-              <input
-                type="number"
-                placeholder="Discount %"
-                value={item.discount}
-                min={0}
-                onChange={(e) =>
-                  setItems(
-                    items.map((it, index) =>
-                      index === i
-                        ? { ...it, discount: Number(e.target.value) }
-                        : it,
-                    ),
-                  )
-                }
-                className="w-10 md:w-20 p-2 border rounded"
-              />
-              <button
-                id="button"
-                onClick={() => removeItem(i)}
-                className="text-white px-4 py-2 rounded-3xl cursor-pointer"
-              >
-                Delete
-              </button>
-            </div>
-          ))}
+          {items.map((item, i) => {
+            const itemTotal =
+              item.qty * item.price +
+              (item.qty * item.price * item.gst) / 100 -
+              (item.qty * item.price * item.discount) / 100;
+
+            return (
+              <div key={i} className="flex gap-2 mb-2 flex-wrap">
+                <input
+                  type="text"
+                  placeholder="Item"
+                  value={item.desc}
+                  onChange={(e) =>
+                    setItems(
+                      items.map((it, idx) =>
+                        idx === i ? { ...it, desc: e.target.value } : it,
+                      ),
+                    )
+                  }
+                  className="flex-1 p-2 border rounded"
+                />
+
+                <input
+                  type="number"
+                  value={item.qty}
+                  min={1}
+                  onChange={(e) =>
+                    setItems(
+                      items.map((it, index) =>
+                        index === i
+                          ? { ...it, qty: Number(e.target.value) }
+                          : it,
+                      ),
+                    )
+                  }
+                  className="w-16 p-2 border rounded"
+                />
+
+                <input
+                  type="number"
+                  value={item.price}
+                  min={0}
+                  onChange={(e) =>
+                    setItems(
+                      items.map((it, index) =>
+                        index === i
+                          ? { ...it, price: Number(e.target.value) }
+                          : it,
+                      ),
+                    )
+                  }
+                  className="w-20 p-2 border rounded"
+                />
+
+                <input
+                  type="number"
+                  value={item.gst}
+                  min={0}
+                  onChange={(e) =>
+                    setItems(
+                      items.map((it, index) =>
+                        index === i
+                          ? { ...it, gst: Number(e.target.value) }
+                          : it,
+                      ),
+                    )
+                  }
+                  className="w-16 p-2 border rounded"
+                />
+
+                <input
+                  type="number"
+                  value={item.discount}
+                  min={0}
+                  onChange={(e) =>
+                    setItems(
+                      items.map((it, index) =>
+                        index === i
+                          ? { ...it, discount: Number(e.target.value) }
+                          : it,
+                      ),
+                    )
+                  }
+                  className="w-20 p-2 border rounded"
+                />
+
+                <input
+                  type="text"
+                  value={` ${itemTotal.toFixed(2)}`}
+                  readOnly
+                  className="w-24 p-2 border rounded bg-gray-100 text-center"
+                />
+
+                <button
+                  onClick={() => removeItem(i)}
+                  id="button"
+                  className="text-white px-4 py-2 rounded-3xl cursor-pointer"
+                >
+                  Delete
+                </button>
+              </div>
+            );
+          })}
 
           <button
             id="addproduct"
