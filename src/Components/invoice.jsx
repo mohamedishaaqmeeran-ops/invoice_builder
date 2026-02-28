@@ -127,7 +127,7 @@ const Invoice = () => {
 
     y += 12;
 
-    pdf.text("Item", 10, y);
+    pdf.text("Description", 10, y);
     pdf.text("Qty", 80, y);
     pdf.text("Price", 100, y);
     pdf.text("GST%", 130, y);
