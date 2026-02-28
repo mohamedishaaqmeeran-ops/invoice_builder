@@ -264,14 +264,16 @@ const Invoice = () => {
             />
           </div>
 
-          <div className="flex gap-0.5 md:gap-2 mb-2 font-bold text-sm">
-            <div className="flex-1">Description</div>
-            <div className="w-16 text-center">Qty</div>
-            <div className="w-20 text-center">Price</div>
-            <div className="w-16 text-center">GST%</div>
-            <div className="w-20 text-center">Disc%</div>
-            <div className="w-24 text-center">Total</div>
-            <div className="w-25 text-center">Action</div>
+          <div className="flex gap-0.5 md:gap-3.5 mb-2 font-semibold text-sm">
+            <div className="w-20 md:flex-1">Description</div>
+            <div className="w-10 md:w-16 text-center">Qty</div>
+            <div className="w-10 md:w-20 text-center">Price</div>
+            <div className="w-10 md:w-16 text-center">GST%</div>
+            <div className="w-10 md:w-20 text-center">Disc%</div>
+            <div className="w-10 md:w-20 text-center">Total</div>
+            <div className="hidden sm:block w-10 md:w-20 text-center">
+              Action
+            </div>
           </div>
           {items.map((item, i) => {
             const itemTotal =
@@ -280,7 +282,7 @@ const Invoice = () => {
               (item.qty * item.price * item.discount) / 100;
 
             return (
-              <div key={i} className="flex gap-2 mb-2 flex-wrap">
+              <div key={i} className="flex gap-0.5 md:gap-2.5 mb-2 flex-wrap">
                 <input
                   type="text"
                   placeholder="Item"
@@ -292,7 +294,7 @@ const Invoice = () => {
                       ),
                     )
                   }
-                  className="flex-1 p-2 border rounded"
+                  className="w-20 md:flex-1 p-2 border rounded"
                 />
 
                 <input
@@ -308,7 +310,7 @@ const Invoice = () => {
                       ),
                     )
                   }
-                  className="w-16 p-2 border rounded"
+                  className="w-10 md:w-16 p-2 border rounded"
                 />
 
                 <input
@@ -324,7 +326,7 @@ const Invoice = () => {
                       ),
                     )
                   }
-                  className="w-20 p-2 border rounded"
+                  className="w-10 md:w-20 p-2 border rounded"
                 />
 
                 <input
@@ -340,7 +342,7 @@ const Invoice = () => {
                       ),
                     )
                   }
-                  className="w-16 p-2 border rounded"
+                  className="w-10 md:w-16 p-2 border rounded"
                 />
 
                 <input
@@ -356,20 +358,20 @@ const Invoice = () => {
                       ),
                     )
                   }
-                  className="w-20 p-2 border rounded"
+                  className="w-10 md:w-16 p-2 border rounded"
                 />
 
                 <input
                   type="text"
                   value={` ${itemTotal.toFixed(2)}`}
                   readOnly
-                  className="w-24 p-2 border rounded bg-gray-100 text-center"
+                  className="w-10 md:w-26 p-2 border rounded bg-gray-100 text-center"
                 />
 
                 <button
                   onClick={() => removeItem(i)}
                   id="button"
-                  className="text-white px-4 py-2 rounded-3xl cursor-pointer"
+                  className="text-white md:px-4 py-2 rounded-3xl cursor-pointer"
                 >
                   Delete
                 </button>
